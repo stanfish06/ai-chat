@@ -1,0 +1,18 @@
+[tools]
+go = "latest"
+node = "latest"
+
+[env]
+_.path = "~/go/bin"
+
+[tasks.dev]
+run = "wails dev -tags webkit2_41"
+
+[tasks.build]
+run = "wails build -tags webkit2_41"
+
+[tasks.start]
+run = [
+  "wails build -tags webkit2_41",
+  "./build/bin/ai-chat &"
+]

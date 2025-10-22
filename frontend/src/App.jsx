@@ -13,9 +13,13 @@ import {
 import { ColorModeButton, useColorModeValue } from './components/ui/color-mode'
 import Sidebar from './components/Sidebar'
 import { Greet } from "../wailsjs/go/main/App"
+import { UpdateMsg } from "../wailsjs/go/main/Prompt"
 
 function App() {
   const [name, setName] = useState('')
+  const [text, setText] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [err, setErr] = useState(null)
   const [result, setResult] = useState('')
 
   const bg = useColorModeValue('gray.50', 'gray.900')
@@ -30,6 +34,19 @@ function App() {
         console.error('Error calling Greet:', error)
         setResult('Error calling backend function')
       }
+    }
+  }
+
+  const sendPrompt = async () => {
+    setLoading(true);
+    setErr(null);
+    try {
+      const confirmation = await UpdateMsg(text);
+      console.log(confirmation);
+    } catch (e) {
+      setErr(String(e));
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -53,20 +70,20 @@ function App() {
 
               <VStack spacing={3} w="full">
                 <Input
-                  placeholder="Enter your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter a message"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
                   size="lg"
                 />
 
                 <Button
-                  onClick={handleGreet}
+                  onClick={sendPrompt}
                   colorScheme="blue"
                   size="lg"
                   w="full"
-                  disabled={!name}
+                  disabled={!text}
                 >
-                  Greet Me
+                  send
                 </Button>
               </VStack>
 
